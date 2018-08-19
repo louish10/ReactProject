@@ -22,7 +22,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      result: null,
+      results: null,
+      searchKey: '',
       searchTerm: DEFAULT_QUERY,
     };
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -34,9 +35,10 @@ class App extends Component {
 
   setSearchTopStories(result) {
     const { hits, page } = result;
+    const { searchKey, results } = this.state;
 
-    const oldHits = page !== 0
-      ? this.state.result.hits
+    const oldHits = results && results[searchKey]
+      ? results[searchKey].hits
       : [];
 
     const updatedHits = [
@@ -44,13 +46,17 @@ class App extends Component {
       ...hits
     ];
     this.setState({
-       result: {hits: updatedHits, page}
+       results: {
+         ...results,
+         [searchKey]: { hits: updatedHits, page}
+       }
      })
   }
 
   componentDidMount() {
     const { searchTerm } = this.state;
-    this.fetchSearchTopStories(searchTerm)
+    this.setState({ searchKey: searchTerm });
+    this.fetchSearchTopStories(searchTerm);
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
@@ -66,6 +72,7 @@ class App extends Component {
 
   onSearchSubmit(event) {
     const{ searchTerm } = this.state;
+    this.setState({ searchKey: searchTerm });
     this.fetchSearchTopStories(searchTerm);
     event.preventDefault();
   }
