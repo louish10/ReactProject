@@ -144,6 +144,8 @@ class App extends Component {
   }
 }
 
+
+
 const Search = ({ value, onChange, onSubmit, children }) =>
     (<form onSubmit={onSubmit}>
       <input
@@ -192,3 +194,8 @@ const Button = ({ onClick, className='', children }) =>
   );
 
 export default App;
+export {
+  Button,
+  Search,
+  Table,
+}
